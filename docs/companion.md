@@ -56,6 +56,7 @@ An annotation has these fields:
 | `status` | No | How far the subject is [formalized](#status-kind-id-and-note) |
 | `kind` | No | What the subject is, such as `theorem` |
 | `id` | No | A name for the subject, shared by the annotations about it |
+| `parent` | No | The `id` of the subject that this subject is [part of](#parts) |
 | `note` | No | Free text |
 | `extensions` | No | An object of [application data](#extensions) |
 | `$schema` | No | A [reference](#references) used as a tooling hint |
@@ -186,6 +187,42 @@ it, so that a consumer can group them. Within a companion, annotations with the
 same `id` are about the same subject, though their `subject` ends may differ;
 ids in different companions, such as two repositories about one book, may
 coincide.
+
+## Parts
+
+`parent` is a string: the `id` of another subject in the same companion that
+this subject is part of. A theorem's hypothesis, a clause of a definition or a
+step of a proof names the statement, definition or proof that holds it, so a
+consumer can show the parts with the whole and a reviewer can check them
+together. Parts nest: a clause of a hypothesis names the hypothesis.
+
+`parent` describes the subject, as `status` does, so annotations about one
+subject should agree on it, and it should not be the annotation's own `id`.
+Like `id`, it is checked only as a nonempty string. Nothing resolves it or
+checks that ids are unique; a consumer that finds no annotation with that `id`
+reports the parent as missing.
+
+`parent` is not the relation `hasPart`. `hasPart` says that the object states
+one part of the subject. `parent` says that the subject is part of another
+subject, and leaves `relation` to say how the subject and object of this
+annotation relate. These two annotations link Theorem 2 of a paper, then its
+first hypothesis, to a Lean theorem and its binder:
+
+```json
+{ "id": "theorem-2", "kind": "theorem", "relation": "exactMatch",
+  "subject": [ { "type": "latex", "uri": "paper.tex", "location": { "label": "thm:sparse" } } ],
+  "object": [ { "type": "lean", "uri": "https://example.org/walks", "version": "4f3c2a1b0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b",
+                "location": { "declaration": "Walks.walk_sparse" } } ] }
+```
+
+```json
+{ "id": "theorem-2-d", "parent": "theorem-2", "relation": "exactMatch",
+  "subject": [ { "type": "latex", "uri": "paper.tex",
+                 "sha256": "6c6a04b64488546e49f0ebb4c6310bb091487b5861b5b525985faec6e80c2e7f",
+                 "location": { "bytes": [2766, 2781] } } ],
+  "object": [ { "type": "lean", "uri": "https://example.org/walks", "version": "4f3c2a1b0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b",
+                "location": { "declaration": "Walks.walk_sparse", "module": "Walks.Sparse", "bytes": [962, 977] } } ] }
+```
 
 ## Ends
 

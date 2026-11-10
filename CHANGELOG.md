@@ -9,6 +9,9 @@
   `sha256`, and a `lean` end must give `version`; in Lean, `bytes` needs
   `module` and excludes `lines`. The new `BYTES` problem says that a range
   ends at or before its start. Annotations valid under 1.0 stay valid.
+- An annotation may give `parent`, the `id` of the subject that its subject is
+  part of, such as the theorem that holds a hypothesis. Parts nest, and only the
+  form is checked: nothing resolves the `id`.
 
 ## 1.0.2 (2026-11-05)
 

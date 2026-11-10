@@ -236,6 +236,7 @@ footer { margin-top: 44px; color: var(--muted); font-size: 13px; }
     'status': 'how far the subject is formalized, such as ' + list(['formalized', 'partial', 'not_formalized'].map(code), 'or'),
     'kind': 'what the subject is, such as ' + list(['definition', 'theorem', 'proof', 'proof_step'].map(code), 'or'),
     'id': 'name shared by annotations about the same subject',
+    'parent': 'the ' + code('id') + ' of the subject this one is part of, such as the theorem that holds a hypothesis',
     'note': 'free-text note',
     '$schema': 'schema reference for editor tooling',
     'end.uri': 'the document; for ' + code('lean') + ', the project',
@@ -260,7 +261,7 @@ footer { margin-top: 44px; color: var(--muted); font-size: 13px; }
   }
 
   // 1. The annotation.
-  set('record-table', keyTable(SCHEMA, '', ['subject', 'object', 'relation', 'status', 'kind', 'id', 'note', 'extensions', '$schema']));
+  set('record-table', keyTable(SCHEMA, '', ['subject', 'object', 'relation', 'status', 'kind', 'id', 'parent', 'note', 'extensions', '$schema']));
 
   // 2. Ends.
   set('ends-lead', 'An end identifies a document or a part of one. Use multiple ends for a passage split across pages.' + exLink('page-split.json'));
