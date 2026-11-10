@@ -12,6 +12,10 @@
 - An annotation may give `parent`, the `id` of the subject that its subject is
   part of, such as the theorem that holds a hypothesis. Parts nest, and only the
   form is checked: nothing resolves the `id`.
+- The specification recommends `kind` values for parts, such as `hypothesis`
+  and `conclusion`, and `convention` for a standing assumption. It shows how a
+  checked absence records a condition that the Lean leaves out, or a hypothesis
+  that it adds, with the other statement as the object.
 
 ## 1.0.2 (2026-11-05)
 

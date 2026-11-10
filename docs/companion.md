@@ -202,6 +202,12 @@ Like `id`, it is checked only as a nonempty string. Nothing resolves it or
 checks that ids are unique; a consumer that finds no annotation with that `id`
 reports the parent as missing.
 
+For a part, these `kind` values are recommended: `hypothesis`, `conclusion`,
+`binder` (a variable and its type), `quantifier`, `defined_term` (the word
+being defined), `definition_body` and `notation`. A `convention` is a standing
+assumption, such as "throughout, all spaces are nonempty", that statements
+elsewhere rely on. It is a subject of its own, with no `parent`.
+
 `parent` is not the relation `hasPart`. `hasPart` says that the object states
 one part of the subject. `parent` says that the subject is part of another
 subject, and leaves `relation` to say how the subject and object of this
@@ -222,6 +228,36 @@ first hypothesis, to a Lean theorem and its binder:
                  "location": { "bytes": [2766, 2781] } } ],
   "object": [ { "type": "lean", "uri": "https://example.org/walks", "version": "4f3c2a1b0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b",
                 "location": { "declaration": "Walks.walk_sparse", "module": "Walks.Sparse", "bytes": [962, 977] } } ] }
+```
+
+### Parts with no counterpart
+
+A formalization can prove a true theorem that is not the paper's by leaving out
+a condition the paper states, or by assuming one the paper does not. Each is a
+[checked absence](#unlinked-passages-and-checked-absences) whose object is the
+other statement, not a whole library:
+
+- A condition that the Lean leaves out: the subject is the paper's clause, its
+  `parent` is the statement, and the object is the Lean declaration at a
+  `version`, with the relation `noMatch`. The declaration was read and states
+  no counterpart of the clause.
+- A hypothesis that the Lean adds: the subject is the Lean binder, selected by
+  `bytes`, and the object is the paper's statement, with the relation
+  `noMatch`. Here the subject is the formal side, since it is the side that has
+  no counterpart.
+
+The object end is pinned as for any checked absence: a Lean object by its
+`version`, a LaTeX object by its `sha256`. A statement with such parts is
+rarely an `exactMatch` of its counterpart. This part records a hypothesis that
+the Lean adds to Theorem 3, whose own annotation has the `id` `theorem-3`:
+
+```json
+{ "id": "theorem-3-extra", "parent": "theorem-3", "kind": "hypothesis", "relation": "noMatch",
+  "subject": [ { "type": "lean", "uri": "https://example.org/walks", "version": "4f3c2a1b0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b",
+                 "location": { "declaration": "Walks.walk_dense", "module": "Walks.Sparse", "bytes": [1210, 1232] } } ],
+  "object": [ { "type": "latex", "uri": "paper.tex",
+                "sha256": "6c6a04b64488546e49f0ebb4c6310bb091487b5861b5b525985faec6e80c2e7f",
+                "location": { "label": "thm:dense" } } ] }
 ```
 
 ## Ends
